@@ -1,27 +1,35 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { 
   User,
-  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signOut as firebaseSignOut,
   onAuthStateChanged
 } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
 import { UserProfile } from '../types';
 
 interface AuthContextType {
   user: User | null;
   userProfile: UserProfile | null;
-  loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string, role: 'coach' | 'client') => Promise<void>;
+  signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  updateProfile: (data: Partial<UserProfile>) => Promise<void>;
+  loading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+// Create the context
+export const AuthContext = createContext<AuthContextType>({
+  user: null,
+  userProfile: null,
+  signIn: async () => {},
+  signUp: async () => {},
+  signOut: async () => {},
+  loading: true
+});
 
+// Create the hook
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -30,7 +38,8 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+// Create the provider component
+export const AuthProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -56,44 +65,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await signInWithEmailAndPassword(auth, email, password);
   };
 
-  const signUp = async (email: string, password: string, name: string, role: 'coach' | 'client') => {
-    const { user } = await createUserWithEmailAndPassword(auth, email, password);
-    const userProfile: UserProfile = {
-      id: user.uid,
-      email,
-      name,
-      role,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    await setDoc(doc(db, 'users', user.uid), userProfile);
-    setUserProfile(userProfile);
+  const signUp = async (email: string, password: string) => {
+    await createUserWithEmailAndPassword(auth, email, password);
   };
 
   const signOut = async () => {
     await firebaseSignOut(auth);
   };
 
-  const updateProfile = async (data: Partial<UserProfile>) => {
-    if (!user || !userProfile) return;
-    const updatedProfile = {
-      ...userProfile,
-      ...data,
-      updatedAt: new Date()
-    };
-    await setDoc(doc(db, 'users', user.uid), updatedProfile);
-    setUserProfile(updatedProfile);
-  };
-
-  const value = {
-    user,
-    userProfile,
-    loading,
-    signIn,
-    signUp,
-    signOut,
-    updateProfile
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider 
+      value={{
+        user,
+        userProfile,
+        signIn,
+        signUp,
+        signOut,
+        loading
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }; 

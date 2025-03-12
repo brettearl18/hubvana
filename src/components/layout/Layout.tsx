@@ -1,24 +1,17 @@
-import { ReactNode } from 'react';
-import { Box, Flex, useColorModeValue } from '@chakra-ui/react';
-import Navbar from './Navbar';
-import Sidebar from './Sidebar';
+import { Box } from '@chakra-ui/react';
+import TopNav from './TopNav';
 
 interface LayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  const bgColor = useColorModeValue('gray.50', 'gray.900');
-
   return (
-    <Box minH="100vh" bg={bgColor}>
-      <Navbar />
-      <Flex>
-        <Sidebar />
-        <Box flex="1" p="6">
-          {children}
-        </Box>
-      </Flex>
+    <Box minH="100vh" bg="gray.50">
+      <TopNav />
+      <Box pt="72px" px={4} maxW="1400px" mx="auto">
+        {children}
+      </Box>
     </Box>
   );
 };

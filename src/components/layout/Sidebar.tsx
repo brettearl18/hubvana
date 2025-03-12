@@ -17,7 +17,7 @@ import {
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import useAuth from '../../hooks/useAuth';
 
 interface LinkItemProps {
   name: string;
@@ -83,7 +83,7 @@ const NavItem = ({ icon, path, children, ...rest }: NavItemProps) => {
       href="#"
       style={{ textDecoration: 'none' }}
       _focus={{ boxShadow: 'none' }}
-      onClick={(e) => {
+      onClick={(e: React.MouseEvent) => {
         e.preventDefault();
         navigate(path);
       }}

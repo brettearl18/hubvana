@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import useAuth from '../../hooks/useAuth';
 
 const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure();
@@ -110,7 +110,7 @@ const Navbar = () => {
                 fontWeight={600}
                 color={'white'}
                 bg={'brand.500'}
-                href={'#'}
+                as="a"
                 _hover={{
                   bg: 'brand.400',
                 }}

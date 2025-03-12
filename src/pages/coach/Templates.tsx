@@ -30,7 +30,7 @@ import { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import { FiPlus, FiTrash2, FiEdit2 } from 'react-icons/fi';
 import { db } from '../../config/firebase';
-import { useAuth } from '../../context/AuthContext';
+import useAuth from '../../hooks/useAuth';
 import { CheckInTemplate, Question } from '../../types';
 
 const Templates = () => {

@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
+import useAuth from './hooks/useAuth';
 import Layout from './components/layout/Layout';
 
 // Auth pages
@@ -15,6 +15,9 @@ import Templates from './pages/coach/Templates';
 import ClientDashboard from './pages/client/Dashboard';
 import CheckIn from './pages/client/CheckIn';
 import Progress from './pages/client/Progress';
+
+// Test page
+import TestFirebase from './pages/TestFirebase';
 
 const ProtectedRoute = ({ children, allowedRoles }: { children: JSX.Element, allowedRoles?: string[] }) => {
   const { user, userProfile, loading } = useAuth();
@@ -40,6 +43,15 @@ const AppRoutes = () => {
       {/* Public routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+
+      {/* Test route */}
+      <Route path="/test" element={
+        <ProtectedRoute>
+          <Layout>
+            <TestFirebase />
+          </Layout>
+        </ProtectedRoute>
+      } />
 
       {/* Coach routes */}
       <Route path="/coach" element={

@@ -26,7 +26,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, query, where, getDocs, addDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../../config/firebase';
-import { useAuth } from '../../context/AuthContext';
+import useAuth from '../../hooks/useAuth';
 import { CheckInTemplate, Question, QuestionResponse, CheckIn } from '../../types';
 
 const CheckInPage = () => {

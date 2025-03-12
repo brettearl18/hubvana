@@ -20,7 +20,7 @@ import { collection, query, where, getDocs, orderBy, limit } from 'firebase/fire
 import { useNavigate } from 'react-router-dom';
 import { FiCalendar, FiTrendingUp, FiCheckCircle } from 'react-icons/fi';
 import { db } from '../../config/firebase';
-import { useAuth } from '../../context/AuthContext';
+import useAuth from '../../hooks/useAuth';
 import { CheckIn, ClientProgress } from '../../types';
 
 const Dashboard = () => {

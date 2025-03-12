@@ -12,11 +12,10 @@ import {
   FormErrorMessage,
   RadioGroup,
   Radio,
-  HStack,
 } from '@chakra-ui/react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import useAuth from '../../hooks/useAuth';
 
 interface RegisterFormData {
   email: string;
@@ -38,7 +37,7 @@ const Register = () => {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      await signUp(data.email, data.password, data.name, data.role);
+      await signUp(data.email, data.password);
       toast({
         title: 'Account created.',
         description: "We've created your account for you.",
@@ -46,7 +45,7 @@ const Register = () => {
         duration: 3000,
         isClosable: true,
       });
-      navigate('/');
+      navigate(data.role === 'coach' ? '/coach' : '/client');
     } catch (error) {
       toast({
         title: 'Error',
@@ -132,8 +131,8 @@ const Register = () => {
                 </FormErrorMessage>
               </FormControl>
 
-              <FormControl isInvalid={!!errors.role}>
-                <FormLabel>I am a</FormLabel>
+              <FormControl>
+                <FormLabel>Role</FormLabel>
                 <Controller
                   name="role"
                   control={control}
@@ -141,16 +140,13 @@ const Register = () => {
                   rules={{ required: 'Please select a role' }}
                   render={({ field }) => (
                     <RadioGroup {...field}>
-                      <HStack spacing="24px">
-                        <Radio value="coach">Coach</Radio>
+                      <Stack direction="row">
                         <Radio value="client">Client</Radio>
-                      </HStack>
+                        <Radio value="coach">Coach</Radio>
+                      </Stack>
                     </RadioGroup>
                   )}
                 />
-                <FormErrorMessage>
-                  {errors.role && errors.role.message}
-                </FormErrorMessage>
               </FormControl>
 
               <Button
